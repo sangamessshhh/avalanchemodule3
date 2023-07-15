@@ -17,11 +17,22 @@ To run this program, you can use Remix, an online Solidity IDE. To get started, 
 Once you are on the Remix website, create a new file by clicking on the "+" icon in the left-hand sidebar. Save the file with a .sol extension (e.g., mod3.sol). Copy and paste the following code into the file:
 
 ```javascript
-pragma solidity ^0.8.4;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.9;
 
-contract HelloWorld {
-    function sayHello() public pure returns (string memory) {
-        return "Hello World!";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+contract Sangamesh is ERC20, Ownable {
+    constructor() ERC20("Sangamesh", "SMG") {}
+
+    function mint(address to, uint256 amount) public onlyOwner {
+        _mint(to, amount);
+    }
+
+    function burn(uint256 amount) public {
+        require(balanceOf(msg.sender) >= amount, "Insufficient balance");
+        _burn(msg.sender, amount);
     }
 }
 
@@ -30,6 +41,18 @@ contract HelloWorld {
 To compile the code, click on the "Solidity Compiler" tab in the left-hand sidebar. Make sure the "Compiler" option is set to "0.8.9" (or another compatible version), and then click on the "Compile mod3.sol" button.
 
 Once the code is compiled, you can deploy the contract by clicking on the "Deploy & Run Transactions" tab in the left-hand sidebar. Select the "mod3" contract from the dropdown menu, and then click on the "Deploy" button.
+
+### Deploying to Hardhat Network
+
+To deploy it to hardhat network: run the following commands,
+
+```shell
+npx hardhat node
+```
+
+```shell
+npx hardhat run scripts/deploy.js
+```
 
 
 ## Authors
